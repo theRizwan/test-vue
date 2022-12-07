@@ -1,61 +1,87 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-typescript" target="_blank" rel="noopener">typescript</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div id="app">
+    <v-app id="inspire">
+      <v-container fluid>
+        <v-row align="center">
+          <v-col class="d-flex" cols="12" sm="6">
+            <v-select v-model="venue" :items="venues" label="Venue (optional)" solo dense>
+              <template #append-item>
+                <div class="append">
+                  <v-btn class="btn" @click.stop="dialog = true"><img class="image" v-bind:src="addImage" />Add
+                    Venue</v-btn>
+                </div>
+              </template>
+            </v-select>
+          </v-col>
+        </v-row>
+        <v-dialog v-model="dialog" max-width="400">
+          <v-card>
+            <v-card-title class="text-h5">
+              Add Venue
+            </v-card-title>
+
+            <v-card-text>
+              <v-text-field v-model="newVenue" label="Enter Venue Name*" required :error="error"></v-text-field>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="red darken-1" text @click="dialog = false">
+                Cancel
+              </v-btn>
+
+              <v-btn type="submit" color="green darken-1" text @click="addVenue">
+                Submit
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-container>
+    </v-app>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang='ts'>
+import { defineComponent } from 'vue'
+
 
 export default defineComponent({
   name: 'HelloWorld',
-  props: {
-    msg: String,
-  },
-});
-</script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+  data() {
+    return {
+      venues: ['SPA1', 'SPA2', 'SPA3'],
+      addImage: require("../assets/add.png"),
+      dialog: false,
+      venue: '',
+      newVenue: '',
+      error: false,
+    }
+  },
+  methods: {
+    addVenue(e: any) {
+      if (this.venues.includes(this.newVenue)) {
+        this.error = true
+      } else if (this.newVenue.trim()) {
+        e.preventDefault();
+        console.log(this.newVenue)
+        this.venue = this.newVenue
+        this.venues.push(this.newVenue)
+        this.dialog = false
+      } else {
+        this.error = true
+      }
+    }
+  },
+})
+</script>
+<style>
+.image {
+  height: 20px;
+  width: 20px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+
+.btn {
+  border: 2px solid white;
 }
 </style>
