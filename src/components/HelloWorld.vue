@@ -68,6 +68,7 @@ export default defineComponent({
         this.venue = this.newVenue
         this.venues.push(this.newVenue)
         this.dialog = false
+        this.error = false
       } else {
         this.error = true
       }
